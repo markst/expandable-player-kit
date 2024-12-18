@@ -1,7 +1,4 @@
-package example.ui
-
-import ExpandableSettings
-import MinimizableHandler
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,21 +6,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.theme.ScGray
+import ui.theme.ScGray
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import expandable
-import expandableplayer.composeapp.generated.resources.*
+import expandableplayer.example.generated.resources.Res
+import expandableplayer.example.generated.resources.screengrab_1
 import org.jetbrains.compose.resources.painterResource
+
+import dev.markturnip.expandable.ExpandableSettings
+import dev.markturnip.expandable.MinimizableHandler
+import dev.markturnip.expandable.expandable
 import ui.PlayerView
 
 @Composable
@@ -37,7 +38,6 @@ fun ExampleDemo() {
         cornerRadius = 35.dp
     )
     val handler = remember { MinimizableHandler(scope, settings) }
-
     val hazeState = remember { HazeState() }
 
     Box(
@@ -51,13 +51,8 @@ fun ExampleDemo() {
             modifier = Modifier
                 .wrapContentHeight(unbounded = true, align = Alignment.Top)
                 .fillMaxWidth()
-                .haze(
-                    state = hazeState,
-                    style = HazeDefaults.style(
-                        blurRadius = 18.dp,
-                        backgroundColor = Color.Gray.copy(0.6f)
-                    ),
-                )
+                .haze(state = hazeState)
+
         )
 
         Box(
@@ -70,7 +65,13 @@ fun ExampleDemo() {
             modifier = Modifier
                 .fillMaxWidth()
                 .expandable(handler = handler, scope = scope)
-                .hazeChild(state = hazeState, shape = RoundedCornerShape((35 - (20 * handler.fraction.value)).dp)),
+                .hazeChild(
+                    state = hazeState,
+                    style = HazeDefaults.style(
+                        blurRadius = 18.dp,
+                        backgroundColor = Color.Gray.copy(0.6f)
+                    )
+                ),
             miniHandler = handler
         )
 
