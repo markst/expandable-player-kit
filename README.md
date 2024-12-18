@@ -1,14 +1,75 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# Expandable Player Modifier
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+[![Platform](https://img.shields.io/badge/platform-Android-blue.svg)](https://github.com/markst)  
+A custom Jetpack Compose modifier that adds an expandable media player to your screen, inspired by SoundCloud's mini-player.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Features
 
+- Supports vertical dragging to expand/collapse the player.
+- Customizable height, corner radius, and padding for minimized and maximized states.
+- Smooth animations for transitions.
+- Fully composable and integrates seamlessly with Jetpack Compose UI.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Demo
+
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/46e89b32-d9de-42b9-9d63-befd2a8e5c1d" width="220"/></td>
+    <td><img src="https://github.com/user-attachments/assets/a57af486-7ea9-46c8-849c-7b9f6cccf6eb" width="220"/></td>
+  </tr>
+</table>
+
+## Usage
+
+Here's an example of how to use the `expandable` modifier in your Composable:
+
+```kotlin
+@Composable
+fun ExampleDemo() {
+    val scope = rememberCoroutineScope()
+    val settings = ExpandableSettings(
+        minimizedHeight = 70.dp,
+        maximizedHeight = 650.dp,
+        bottomPadding = 100.dp,
+        expandedBottomPadding = 8.dp,
+        cornerRadius = 35.dp
+    )
+    val handler = remember { MinimizableHandler(scope, settings) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        // Your content goes here
+        PlayerView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .expandable(handler = handler, scope = scope),
+            miniHandler = handler
+        )
+    }
+}
+```
+
+## Settings
+
+Customize the behavior using `ExpandableSettings`:
+
+```kotlin
+data class ExpandableSettings(
+    val minimizedHeight: Dp,
+    val maximizedHeight: Dp,
+    val bottomPadding: Dp,
+    val expandedBottomPadding: Dp,
+    val cornerRadius: Dp
+)
+```
+
+## How It Works
+
+The `expandable` modifier responds to gestures and adjusts its height, corner radius, and alpha based on the expansion state. You can expand or collapse the player programmatically using the `MinimizableHandler`.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
